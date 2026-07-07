@@ -1,0 +1,7 @@
+[extension]
+name = "linter"
+description = "Lint Nuon app config directories for best practices and common errors"
+
+[extension.auth]
+requires_token = false
+requires_org = false
