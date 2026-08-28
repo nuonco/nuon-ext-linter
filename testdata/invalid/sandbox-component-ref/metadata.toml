@@ -1,0 +1,3 @@
+version = "v2"
+display_name = "Sandbox component ref"
+description = "Sandbox must not reference components"

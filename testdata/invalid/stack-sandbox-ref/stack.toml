@@ -1,0 +1,6 @@
+type = "aws-cloudformation"
+name = "stack-{{ .nuon.sandbox.outputs.cluster }}"
+description = "bad stack ref"
+
+vpc_nested_template_url = "https://s3.amazonaws.com/bucket/vpc.yaml"
+runner_nested_template_url = "https://s3.amazonaws.com/bucket/runner.yaml"

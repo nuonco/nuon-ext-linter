@@ -27,5 +27,11 @@ func DefaultRules(cfg *config.Config) []rule.Rule {
 		&NoWildcardActions{},
 		&RequirePermissionsBoundary{},
 		&RequirePolicyTests{},
+		&ConfigParse{},
+		&TemplateSyntax{},
+		&TemplateRefExists{},
+		&TemplateScope{},
+		&OPAPolicyValid{},
+		&OPAPolicyBlocksCreate{},
 	}
 }

@@ -1,0 +1,3 @@
+version = "v2"
+display_name = "Lint minimal valid"
+description = "Minimal valid fixture for nuon-ext-linter"

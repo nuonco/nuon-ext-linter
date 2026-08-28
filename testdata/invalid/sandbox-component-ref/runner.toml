@@ -1,0 +1,3 @@
+runner_type = "aws"
+helm_driver = "configmap"
+init_script_url = "https://example.com/init.sh"

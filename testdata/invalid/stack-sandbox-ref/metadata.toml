@@ -1,0 +1,3 @@
+version = "v2"
+display_name = "Stack sandbox ref"
+description = "Stack must not reference sandbox"

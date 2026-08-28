@@ -1,0 +1,3 @@
+version = "v2"
+display_name = "Missing component ref"
+description = "References unknown component"

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/nuonco/nuon-ext-linter/internal/appconfig"
+	"github.com/nuonco/nuon/pkg/config"
 )
 
 type Severity int
@@ -67,9 +68,11 @@ type Finding struct {
 }
 
 type LintContext struct {
-	Dir      string
-	App      *appconfig.AppConfig
-	Platform string // "aws", "azure", "gcp", ""
+	Dir         string
+	App         *appconfig.AppConfig
+	NuonConfig  *config.AppConfig // fully parsed config from nuon/pkg/config/parse
+	Platform    string            // "aws", "azure", "gcp", ""
+	ParseErrors []string          // non-fatal nuon parse messages for config-parse rule
 }
 
 type Rule interface {

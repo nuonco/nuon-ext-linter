@@ -76,6 +76,16 @@ All rules are enabled by default.
 | `no-wildcard-actions` | warning | Policy/boundary JSON must not contain service-wide wildcards (iam:\*, s3:\*) |
 | `require-permissions-boundary` | warning | Permission roles must reference a permissions_boundary |
 | `require-policy-tests` | warning | OPA/Rego policies must have corresponding \_test.rego files |
+| `config-parse` | error | App config must parse with nuon/pkg/config |
+| `template-syntax` | error | Template strings must parse as valid Go templates |
+| `template-ref-exists` | error | Template references must point at declared components and actions |
+| `template-scope` | error | Stack and sandbox templates must not reference unavailable state |
+| `opa-policy-valid` | error | OPA/Rego policies must parse and use package nuon with deny or warn rules |
+| `opa-policy-blocks-create` | warning | Warn when OPA deny rules may block all resource creation |
+
+## Nuon config dependency
+
+Template and reference rules load app configs through [`nuon/pkg/config/parse`](https://github.com/nuonco/nuon/tree/main/pkg/config/parse) (same pipeline as `nuon apps sync`). Local development expects the Nuon monorepo at `../nuon` via a `go.mod` replace directive.
 
 ## Configuration
 
