@@ -69,7 +69,7 @@ func newLintCmd() *cobra.Command {
 			var nuonCfg *nuoncfg.AppConfig
 			var parseErrors []string
 			if cfg, loadErr := nuonconfig.Load(context.Background(), absDir); loadErr != nil {
-				parseErrors = []string{loadErr.Error()}
+				parseErrors = []string{nuonconfig.FormatLoadError(loadErr)}
 			} else {
 				nuonCfg = cfg
 			}

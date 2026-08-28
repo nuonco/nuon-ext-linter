@@ -93,6 +93,19 @@ func TestLoad_InvalidOPADenyAllManaged(t *testing.T) {
 	assert.Equal(t, "opa-policy-blocks-create", findings[0].RuleID)
 }
 
+func TestLoad_InvalidInputUnknownGroup(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test in short mode")
+	}
+
+	dir := testdataDir(t, "invalid", "input-unknown-group")
+	_, err := nuonconfig.Load(context.Background(), dir)
+	require.Error(t, err)
+	msg := nuonconfig.FormatLoadError(err)
+	assert.Contains(t, msg, "group that does not exist")
+	assert.Contains(t, msg, "does_not_exist")
+}
+
 func TestLoad_ValidMinimal(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test in short mode")
