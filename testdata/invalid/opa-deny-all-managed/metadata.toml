@@ -1,0 +1,3 @@
+version = "v2"
+display_name = "OPA deny all managed"
+description = "Policy blocks all managed resources"

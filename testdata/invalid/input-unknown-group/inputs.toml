@@ -1,0 +1,16 @@
+[[group]]
+name = "network"
+description = "Network settings"
+display_name = "Network"
+
+[[input]]
+name = "cidr"
+description = "VPC CIDR"
+display_name = "CIDR"
+group = "network"
+
+[[input]]
+name = "bad_field"
+description = "References a missing group"
+display_name = "Bad"
+group = "does_not_exist"

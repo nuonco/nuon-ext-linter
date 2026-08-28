@@ -1,0 +1,3 @@
+version = "v2"
+display_name = "Invalid input group"
+description = "Input references a group that does not exist"

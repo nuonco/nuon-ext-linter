@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,9 +12,11 @@ import (
 	"github.com/nuonco/nuon-ext-linter/internal/appconfig"
 	"github.com/nuonco/nuon-ext-linter/internal/config"
 	"github.com/nuonco/nuon-ext-linter/internal/custom"
+	"github.com/nuonco/nuon-ext-linter/internal/nuonconfig"
 	"github.com/nuonco/nuon-ext-linter/internal/output"
 	"github.com/nuonco/nuon-ext-linter/internal/rule"
 	"github.com/nuonco/nuon-ext-linter/internal/rules"
+	nuoncfg "github.com/nuonco/nuon/pkg/config"
 )
 
 func newLintCmd() *cobra.Command {
@@ -56,20 +59,31 @@ func newLintCmd() *cobra.Command {
 				minSeverity = severity
 			}
 
-			// Load app config
+			// Load app config (legacy loader for IAM/OPA file paths)
 			app, err := appconfig.Load(absDir)
 			if err != nil {
 				return fmt.Errorf("loading app config: %w", err)
 			}
 
+			// Load fully parsed Nuon config for template/reference validation
+			var nuonCfg *nuoncfg.AppConfig
+			var parseErrors []string
+			if cfg, loadErr := nuonconfig.Load(context.Background(), absDir); loadErr != nil {
+				parseErrors = []string{nuonconfig.FormatLoadError(loadErr)}
+			} else {
+				nuonCfg = cfg
+			}
+
 			// Detect platform
-			platform := detectPlatform(app)
+			platform := detectPlatform(app, nuonCfg)
 
 			// Build lint context
 			ctx := &rule.LintContext{
-				Dir:      absDir,
-				App:      app,
-				Platform: platform,
+				Dir:         absDir,
+				App:         app,
+				NuonConfig:  nuonCfg,
+				Platform:    platform,
+				ParseErrors: parseErrors,
 			}
 
 			// Register built-in rules
@@ -181,7 +195,18 @@ func newRulesCmd() *cobra.Command {
 	}
 }
 
-func detectPlatform(app *appconfig.AppConfig) string {
+func detectPlatform(app *appconfig.AppConfig, nuonCfg *nuoncfg.AppConfig) string {
+	if nuonCfg != nil && nuonCfg.Runner != nil && nuonCfg.Runner.RunnerType != "" {
+		rt := strings.ToLower(nuonCfg.Runner.RunnerType)
+		switch {
+		case strings.HasPrefix(rt, "aws"):
+			return "aws"
+		case strings.HasPrefix(rt, "azure"):
+			return "azure"
+		case strings.HasPrefix(rt, "gcp"), strings.HasPrefix(rt, "google"):
+			return "gcp"
+		}
+	}
 	if app.Runner == nil {
 		return ""
 	}

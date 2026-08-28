@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/nuonco/nuon-ext-linter/internal/appconfig"
+	"github.com/nuonco/nuon/pkg/config"
 )
 
 type Severity int
@@ -31,6 +32,21 @@ func (s Severity) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.String())
 }
 
+func (s *Severity) UnmarshalJSON(data []byte) error {
+	var str string
+	if err := json.Unmarshal(data, &str); err != nil {
+		// Try as integer for backwards compat
+		var num int
+		if err := json.Unmarshal(data, &num); err != nil {
+			return err
+		}
+		*s = Severity(num)
+		return nil
+	}
+	*s = ParseSeverity(str)
+	return nil
+}
+
 func ParseSeverity(s string) Severity {
 	switch s {
 	case "info":
@@ -52,9 +68,11 @@ type Finding struct {
 }
 
 type LintContext struct {
-	Dir      string
-	App      *appconfig.AppConfig
-	Platform string // "aws", "azure", "gcp", ""
+	Dir         string
+	App         *appconfig.AppConfig
+	NuonConfig  *config.AppConfig // fully parsed config from nuon/pkg/config/parse
+	Platform    string            // "aws", "azure", "gcp", ""
+	ParseErrors []string          // non-fatal nuon parse messages for config-parse rule
 }
 
 type Rule interface {

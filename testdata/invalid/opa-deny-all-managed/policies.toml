@@ -1,0 +1,6 @@
+[[policy]]
+name = "blocks-all"
+type = "terraform_module"
+engine = "opa"
+components = ["*"]
+contents = "./policies/blocks-all.rego"

@@ -72,6 +72,30 @@ const defaultLintToml = `# Nuon App Config Linter Configuration
 # [rules.require-policy-tests]
 # enabled = true
 # severity = "warning"
+
+# App config must parse via nuon/pkg/config
+# [rules.config-parse]
+# enabled = true
+# severity = "error"
+
+# Template syntax, reference existence, and stack/sandbox scope
+# [rules.template-syntax]
+# enabled = true
+# severity = "error"
+# [rules.template-ref-exists]
+# enabled = true
+# severity = "error"
+# [rules.template-scope]
+# enabled = true
+# severity = "error"
+
+# OPA policy structure and create-blocking heuristics
+# [rules.opa-policy-valid]
+# enabled = true
+# severity = "error"
+# [rules.opa-policy-blocks-create]
+# enabled = true
+# severity = "warning"
 `
 
 func newInitCmd() *cobra.Command {
